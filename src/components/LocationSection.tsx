@@ -39,12 +39,19 @@ const LocationSection = () => {
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             className="overflow-hidden ocean-shadow-lg"
           >
-            <img
-              src={mapImg}
-              alt="Mapa da localização"
-              className="h-full w-full object-cover"
-              loading="lazy"
-            />
+            <a
+              href="https://www.google.com/maps/place/Barra+da+Tijuca,+Rio+de+Janeiro,+Brazil"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block cursor-pointer hover:opacity-90 transition-opacity"
+            >
+              <img
+                src={mapImg}
+                alt="Mapa da localização"
+                className="h-full w-full object-cover"
+                loading="lazy"
+              />
+            </a>
           </motion.div>
 
           <motion.div

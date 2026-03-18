@@ -1,5 +1,11 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+// @ts-ignore
+import "swiper/css";
+// @ts-ignore
+import "swiper/css/pagination";
 import expViver from "@/assets/exp-viver.webp";
 import expReceber from "@/assets/exp-receber.webp";
 import expContemplar from "@/assets/exp-contemplar.webp";
@@ -35,7 +41,58 @@ const ExperienceSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Mobile Slider */}
+        <div className="lg:hidden">
+          <style>{`
+            .experience-swiper .swiper-pagination-bullet {
+              width: 8px;
+              height: 8px;
+              background-color: rgba(0, 0, 0, 0.3);
+              opacity: 0.5;
+            }
+            .experience-swiper .swiper-pagination-bullet-active {
+              background-color: rgba(0, 0, 0, 0.8);
+              opacity: 1;
+            }
+          `}</style>
+          <Swiper
+            modules={[Pagination]}
+            pagination={{ clickable: true }}
+            spaceBetween={16}
+            slidesPerView={1}
+            className="experience-swiper w-full"
+          >
+            {experiences.map((item) => (
+              <SwiperSlide key={item.title}>
+                <motion.div
+                  initial={{ y: 30, opacity: 0 }}
+                  animate={isInView ? { y: 0, opacity: 1 } : {}}
+                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  className="group relative aspect-[3/4] cursor-pointer overflow-hidden"
+                >
+                  <img
+                    src={item.img}
+                    alt={item.title}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ocean-deep/80 via-transparent to-transparent" />
+                  <div className="absolute bottom-0 p-6">
+                    <h3 className="font-display text-xl text-accent-foreground mb-2">
+                      {item.title}
+                    </h3>
+                    <p className="font-sans text-sm leading-relaxed text-accent-foreground/70">
+                      {item.desc}
+                    </p>
+                  </div>
+                </motion.div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
+        {/* Desktop Grid */}
+        <div className="hidden lg:grid grid-cols-4 gap-4">
           {experiences.map((item, i) => (
             <motion.div
               key={item.title}

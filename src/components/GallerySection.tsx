@@ -1,5 +1,5 @@
 import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 // @ts-ignore
@@ -8,13 +8,6 @@ import "swiper/css";
 import "swiper/css/navigation";
 // @ts-ignore
 import "swiper/css/pagination";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 
 import galleryPool from "@/assets/gallery-pool.webp";
 import galleryArch from "@/assets/gallery-architecture.webp";
@@ -31,8 +24,6 @@ const slides = [
 const GallerySection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <section id="galeria" ref={ref} className="py-24 bg-ocean-deep md:py-32">
@@ -47,6 +38,52 @@ const GallerySection = () => {
         </motion.h2>
       </div>
 
+      <style>{`
+        .gallery-swiper .swiper-button-next,
+        .gallery-swiper .swiper-button-prev {
+          width: 32px;
+          height: 32px;
+          background-color: rgba(255, 255, 255, 0.8);
+          border-radius: 50%;
+          transition: all 0.3s ease;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+
+        .gallery-swiper .swiper-button-next::after,
+        .gallery-swiper .swiper-button-prev::after {
+          font-size: 12px;
+          color: #000;
+          font-weight: bold;
+        }
+
+        .gallery-swiper .swiper-button-next:hover,
+        .gallery-swiper .swiper-button-prev:hover {
+          background-color: rgba(255, 255, 255, 1);
+          transform: translateY(-50%) scale(1.1);
+        }
+
+        .gallery-swiper .swiper-button-next {
+          right: 16px;
+        }
+
+        .gallery-swiper .swiper-button-prev {
+          left: 16px;
+        }
+
+        .gallery-swiper .swiper-pagination-bullet {
+          width: 8px;
+          height: 8px;
+          background-color: rgba(255, 255, 255, 0.5);
+          opacity: 0.5;
+        }
+
+        .gallery-swiper .swiper-pagination-bullet-active {
+          background-color: rgba(255, 255, 255, 1);
+          opacity: 1;
+        }
+      `}</style>
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={isInView ? { opacity: 1 } : {}}
@@ -56,63 +93,24 @@ const GallerySection = () => {
           modules={[Navigation, Pagination]}
           navigation
           pagination={{ clickable: true }}
-          spaceBetween={0}
+          spaceBetween={20}
           slidesPerView={1}
-          className="w-full"
-          breakpoints={{
-            768: { slidesPerView: 1.3, centeredSlides: true },
-            1024: { slidesPerView: 1.5, centeredSlides: true },
-          }}
+          className="gallery-swiper w-full"
         >
           {slides.map((slide, i) => (
             <SwiperSlide key={i}>
-              <div className="aspect-[16/9] overflow-hidden cursor-pointer">
+              <div className="aspect-[16/9] overflow-hidden w-full">
                 <img
                   src={slide.src}
                   alt={slide.alt}
-                  className="h-full w-full object-cover transition-transform hover:scale-105"
+                  className="h-full w-full object-cover"
                   loading="lazy"
-                  onClick={() => {
-                    setSelectedIndex(i);
-                    setIsOpen(true);
-                  }}
                 />
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
       </motion.div>
-
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-4xl w-full p-0">
-          <DialogHeader className="sr-only">
-            <DialogTitle>Galeria de Imagens</DialogTitle>
-          </DialogHeader>
-          {selectedIndex !== null && (
-            <Swiper
-              modules={[Navigation, Pagination]}
-              navigation
-              pagination={{ clickable: true }}
-              spaceBetween={0}
-              slidesPerView={1}
-              initialSlide={selectedIndex}
-              className="w-full"
-            >
-              {slides.map((slide, i) => (
-                <SwiperSlide key={i}>
-                  <div className="aspect-[16/9] overflow-hidden">
-                    <img
-                      src={slide.src}
-                      alt={slide.alt}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          )}
-        </DialogContent>
-      </Dialog>
     </section>
   );
 };
